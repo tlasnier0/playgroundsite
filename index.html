@@ -4,96 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bienvenue sur mon site !</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-align: center;
-      padding-top: 100px;
-      background-color: #f4f4f9;
-      margin: 0;
-      height: 100vh;
-      position: relative;
-    }
-
-    h1 {
-      font-size: 60px;
-      color: #333;
-      font-weight: normal;
-      text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-      margin-bottom: 30px;
-    }
-
-    .message {
-      font-size: 22px;
-      color: #777;
-      margin-top: 30px;
-      opacity: 0.9;
-      display: block;
-    }
-
-    .click-btn {
-      padding: 15px 30px;
-      font-size: 18px;
-      background-color: #0066cc;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 10px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      transition: transform 0.3s, box-shadow 0.3s ease;
-      margin-top: 20px;
-    }
-
-    .click-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 12px 24px rgba(0, 0, 204, 0.3);
-    }
-
-    video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-    }
-
-    audio {
-      display: none;
-    }
-
-    #rickroll-title {
-      font-family: 'Impact', sans-serif;
-      font-weight: bold;
-      color: #ff6600;
-      display: none;
-      font-size: 70px;
-      text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
-      margin-top: 20px;
-    }
-
-    #music-message {
-      font-size: 22px;
-      color: #777;
-      display: none;
-      margin-top: 10px;
-    }
-
-    .footer-text {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 12px;
-      font-family: 'Arial', sans-serif;
-      color: black;
-      transition: color 0.5s ease;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- Conteneur des particules -->
+  <div id="particles-js"></div>
 
   <h1 id="title">Bienvenue sur mon site !</h1>
 
@@ -101,15 +17,10 @@
 
   <button class="click-btn" onclick="rickroll()">Clique ici !</button>
 
-  <video id="rickrollVideo" autoplay loop muted>
-    <source src="rickroll-video.mp4" type="video/mp4">
-    Ton navigateur ne supporte pas la vidéo.
-  </video>
-
-  <audio id="rickrollAudio" preload="auto">
-    <source src="rickroll-music.mp3" type="audio/mp3">
-    Ton navigateur ne supporte pas l'audio.
-  </audio>
+  <!-- Vidéo masquée par défaut -->
+  <div class="video-background">
+    <iframe id="rickrollVideo" src="https://player.vimeo.com/video/1041777913?muted=1&loop=1&background=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  </div>
 
   <h1 id="rickroll-title">Tu as été rickrollé !</h1>
 
@@ -117,29 +28,9 @@
 
   <div class="footer-text" id="footerText">dev_ by Tom LASNIER pour @tlasnier</div>
 
-  <script>
-    function rickroll() {
-      const video = document.getElementById('rickrollVideo');
-      const audio = document.getElementById('rickrollAudio');
-      const button = document.querySelector('.click-btn');
-      const title = document.getElementById('title');
-      const secondaryText = document.getElementById('secondary-text');
-      const footerText = document.querySelector('.footer-text');
-      const rickrollTitle = document.getElementById('rickroll-title');
-      const musicMessage = document.getElementById('music-message');
-
-      audio.play();
-      video.style.opacity = 1;
-
-      title.style.display = 'none';
-      secondaryText.style.display = 'none';
-      rickrollTitle.style.display = 'block';
-      musicMessage.style.display = 'block';
-
-      footerText.style.color = 'white';
-      button.style.display = 'none';
-    }
-  </script>
+  <script src="https://player.vimeo.com/api/player.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>

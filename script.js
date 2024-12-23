@@ -1,7 +1,7 @@
 particlesJS("particles-js", {
     particles: {
       number: {
-        value: 80, 
+        value: 80,
         density: {
           enable: true,
           value_area: 800
@@ -68,36 +68,29 @@ particlesJS("particles-js", {
       }
     },
     retina_detect: true
-  });
-  
-  // Fonction pour changer l'état du site après le clic sur le bouton
-  function rickroll() {
-    const iframe = document.getElementById('rickrollVideo');
-    const button = document.querySelector('.click-btn');
-    const title = document.getElementById('title');
-    const secondaryText = document.getElementById('secondary-text');
-    const footerText = document.querySelector('.footer-text');
-    const rickrollTitle = document.getElementById('rickroll-title');
-    const musicMessage = document.getElementById('music-message');
-  
-    const player = new Vimeo.Player(iframe);
-    player.setVolume(1);
-  
-    // Changer le fond en noir après le clic
-    document.body.style.backgroundColor = '#000';
-  
-    // Commencer immédiatement la lecture et rendre la vidéo visible
-    iframe.parentElement.style.opacity = 1;
-  
-    // Lancer la vidéo uniquement après le clic
-    player.play();
-  
-    title.style.display = 'none';
-    secondaryText.style.display = 'none';
-    rickrollTitle.style.display = 'block';
-    musicMessage.style.display = 'block';
-  
-    footerText.style.color = 'white';
-    button.style.display = 'none';
-  }
-  
+});
+
+function rickroll() {
+  const video = document.getElementById('rickrollVideo');
+  const button = document.querySelector('.click-btn');
+  const title = document.getElementById('title');
+  const secondaryText = document.getElementById('secondary-text');
+  const footerText = document.querySelector('.footer-text');
+  const rickrollTitle = document.getElementById('rickroll-title');
+  const musicMessage = document.getElementById('music-message');
+
+  // Changer le fond en noir après le clic
+  document.body.style.backgroundColor = '#000';
+
+  // Afficher et lire la vidéo
+  video.style.display = 'block';
+  video.play();
+
+  title.style.display = 'none';
+  secondaryText.style.display = 'none';
+  rickrollTitle.style.display = 'block';
+  musicMessage.style.display = 'block';
+
+  footerText.style.color = 'white';
+  button.style.display = 'none';
+}

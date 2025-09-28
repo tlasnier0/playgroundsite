@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fusion Monsters Score Ajusté</title>
+<style>
+  body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 10px;
+    background: #fafafa;
+  }
+  #score {
+    font-size: 5vw; /* taille relative à la largeur */
+    margin-bottom: 2vh;
+  }
+  #grid {
+    display: grid;
+    /* chaque case occupe 1 fraction de la largeur */
+    grid-template-columns: repeat(4, 1fr);
+    /* on fixe le ratio hauteur/largeur des cases en CSS via aspect-ratio */
+    gap: 1vw;
+    width: 90vw; /* grille prend 90% de la largeur */
+    max-width: 600px; /* limite sur grand écran */
+  }
+  .cell {
+    aspect-ratio: 1/1; /* carré qui s’adapte automatiquement */
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 5vw; /* taille de police relative */
+    border: 2px solid #ccc;
+    cursor: pointer;
+    border-radius: 10%;
+  }
+  .level-1 { background-color: #f9c2c2; }
+  .level-2 { background-color: #f9e1c2; }
+  .level-3 { background-color: #f9f1c2; }
+  .level-4 { background-color: #c2f9c2; }
+  .level-5 { background-color: #c2f0f9; }
+  .level-6 { background-color: #d0c2f9; }
+</style>
+</head>
+<body>
+<div id="score">Score : 0</div>
+<div id="grid"></div>
+
+<script>
+const ROWS = 6, COLS = 4;
+let grid = [];
+let score = 0;
+
+function placementPoints(level){
+  switch(level){
+    case 1: return 20;
+    case 2: return 50;
+    case 3: return 200;
+    case 4: return 500;
+    case 5: return 1500;
+    default: return 3000;
+  }
+}
+
+function initGrid() {
+  const container = document.getElementById("grid");
+  container.innerHTML = "";
+  grid = [];
+  score = 0;
+  updateScore();
+  for(let r=0;r<ROWS;r++){
+    const row=[];
+    for(let c=0;c<COLS;c++){
+      row.push(0);
+      const cell=document.createElement("div");
+      cell.classList.add("cell");
+      cell.dataset.row=r;
+      cell.dataset.col=c;
+      cell.addEventListener("click",()=>placeMonster(r,c));
+      container.appendChild(cell);
+    }
+    grid.push(row);
+  }
+  spawnRandom(4);
+  spawnRandom(5);
+  renderGrid();
+}
+
+function spawnRandom(level){
+  let empty=[];
+  for(let r=0;r<ROWS;r++)
+    for(let c=0;c<COLS;c++)
+      if(grid[r][c]===0) empty.push([r,c]);
+  if(empty.length===0) return;
+  const [r,c] = empty[Math.floor(Math.random()*empty.length)];
+  grid[r][c]=level;
+}
+
+function renderGrid(){
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      const cellDiv=document.querySelector(`.cell[data-row='${r}'][data-col='${c}']`);
+      const val=grid[r][c];
+      cellDiv.textContent = val>0 ? val : "";
+      cellDiv.className="cell";
+      if(val>0) cellDiv.classList.add(`level-${val}`);
+    }
+  }
+}
+
+function isSideNeighbor(a,b){
+  const [r1,c1]=a;
+  const [r2,c2]=b;
+  return (r1===r2 && Math.abs(c1-c2)===1) || (c1===c2 && Math.abs(r1-r2)===1);
+}
+
+function connectedTriplet(a,b,c){
+  const ab = isSideNeighbor(a,b);
+  const ac = isSideNeighbor(a,c);
+  const bc = isSideNeighbor(b,c);
+  return (ab || ac) && (ab || bc) && (ac || bc);
+}
+
+function fuseStrict(lastR,lastC){
+  let changed=true;
+  while(changed){
+    changed=false;
+    const levelPositions={};
+    for(let r=0;r<ROWS;r++){
+      for(let c=0;c<COLS;c++){
+        const lvl=grid[r][c];
+        if(lvl>0){
+          if(!levelPositions[lvl]) levelPositions[lvl]=[];
+          levelPositions[lvl].push([r,c]);
+        }
+      }
+    }
+
+    for(const lvl in levelPositions){
+      const positions=levelPositions[lvl];
+      if(positions.length<3) continue;
+      outer:
+      for(let i=0;i<positions.length-2;i++){
+        for(let j=i+1;j<positions.length-1;j++){
+          for(let k=j+1;k<positions.length;k++){
+            const triplet=[positions[i],positions[j],positions[k]];
+            if(triplet.some(([r,c]) => r===lastR && c===lastC) &&
+               connectedTriplet(triplet[0],triplet[1],triplet[2])) {
+              grid[lastR][lastC] = parseInt(lvl)+1;
+              triplet.forEach(([r,c])=>{
+                if(r!==lastR || c!==lastC){
+                  grid[r][c]=0;
+                }
+              });
+              score += placementPoints(parseInt(lvl)+1);
+              changed=true;
+              break outer;
+            }
+          }
+        }
+      }
+    }
+  }
+  updateScore();
+}
+
+function updateScore(){
+  document.getElementById("score").textContent = "Score : " + score;
+}
+
+function placeMonster(r,c){
+  if(grid[r][c]!==0) return alert("Case occupée !");
+  grid[r][c]=1;
+  score += placementPoints(1);
+  fuseStrict(r,c);
+  renderGrid();
+}
+
+initGrid();
+</script>
+</body>
+</html>

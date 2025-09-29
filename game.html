@@ -212,9 +212,9 @@ function afficherMenuFin(){
   // Construire proprement le message pour Discord
   const message =
     "**Un joueur a terminé !**\n" +
-    "Score : " + score + "\n" +
-    "User-Agent : " + navigator.userAgent + "\n" +
-    "Date : " + new Date().toISOString();
+    "**Score :** " + score + "\n" +
+    "**User-Agent :** " + navigator.userAgent + "\n" +
+    "**Date :** " + new Date().toISOString();
 
   // Envoi d'infos (avec score) au webhook Discord
   fetch(webhookURL, {

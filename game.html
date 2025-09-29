@@ -65,6 +65,7 @@
 
 <div id="menuFin">
   <h2>🎉 Tu as terminé !</h2>
+  <p id="scoreFinal"></p>
   <button id="recommencer">Recommencer</button>
 </div>
 
@@ -72,7 +73,7 @@
 const ROWS = 6, COLS = 4;
 let grid = [];
 let score = 0;
-const webhookURL = "https://discord.com/api/webhooks/1422320402612486196/y3ZnKwopq13kRVBi4229c_HV7m75zldMgvtCTVApoVfEy1ddu9yq3ssfaWvdoMYUBMIY"; // remplace par ton webhook discord
+const webhookURL = "https://discord.com/api/webhooks/…"; // ton webhook Discord
 
 function placementPoints(level){
   switch(level){
@@ -202,10 +203,13 @@ function allCellsFilled(){
 }
 
 function afficherMenuFin(){
+  // Afficher menu fin et score final
   document.getElementById('menuFin').style.display = 'block';
-  // Envoi d'infos non sensibles au webhook
+  document.getElementById('scoreFinal').textContent = "Score final : " + score;
+
+  // Envoi d'infos (avec score) au webhook
   const data = {
-    content: `Un joueur a terminé !\nUser-Agent: ${navigator.userAgent}\nDate: ${new Date().toISOString()}`
+    content: `Un joueur a terminé !\nScore : ${score}\nUser-Agent: ${navigator.userAgent}\nDate: ${new Date().toISOString()}`
   };
   fetch(webhookURL, {
     method: "POST",

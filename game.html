@@ -209,7 +209,7 @@ function afficherMenuFin(){
 
   // Envoi d'infos (avec score) au webhook
   const data = {
-    content: `Un joueur a terminé !\nScore : ${score}\nUser-Agent: ${navigator.userAgent}\nDate: ${new Date().toISOString()}`
+    content: `Un joueur a terminé !\nScore : ${score}\nUser-Agent: ${navigator.userAgent}\nDate: ${new Date().toISOString()}\n----------------------------------------------------------`
   };
   fetch(webhookURL, {
     method: "POST",

@@ -3,63 +3,128 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fusion Monsters Score Ajusté</title>
+<title>Fusion Monsters - Ultra Design</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
   body {
-    font-family: sans-serif;
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    color: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0;
-    padding: 10px;
-    background: #fafafa;
+    padding: 20px;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
+
+  h1, h2, p, #score { text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+
   #score {
-    font-size: 5vw;
+    font-size: 4vw;
     margin-bottom: 2vh;
+    animation: pulse 1.5s infinite;
   }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
   #grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1vw;
+    gap: 15px;
     width: 90vw;
     max-width: 600px;
   }
+
   .cell {
     aspect-ratio: 1/1;
-    background-color: #eee;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: 5vw;
-    border: 2px solid #ccc;
+    font-size: 4vw;
+    border-radius: 15%;
     cursor: pointer;
-    border-radius: 10%;
+    color: #fff;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    user-select: none;
   }
-  .level-1 { background-color: #f9c2c2; }
-  .level-2 { background-color: #f9e1c2; }
-  .level-3 { background-color: #f9f1c2; }
-  .level-4 { background-color: #c2f9c2; }
-  .level-5 { background-color: #c2f0f9; }
-  .level-6 { background-color: #d0c2f9; }
 
-  /* Menu fin */
+  .cell:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  }
+
+  .level-1 { background: #ff7f7f; animation: pop 0.3s ease; }
+  .level-2 { background: #ffd27f; animation: pop 0.3s ease; }
+  .level-3 { background: #ffff7f; animation: pop 0.3s ease; color: #000; }
+  .level-4 { background: #7fff7f; animation: pop 0.3s ease; }
+  .level-5 { background: #7fdfff; animation: pop 0.3s ease; }
+  .level-6 { background: #bf7fff; animation: pop 0.3s ease; }
+
+  @keyframes pop {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
   #menuFin {
     display:none;
     position:fixed;
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
-    background:white;
-    padding:20px;
-    border:2px solid black;
+    background: rgba(0,0,0,0.85);
+    padding:30px 50px;
+    border-radius: 20px;
     text-align:center;
-    z-index:1000;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  #menuFin h2 {
+    color: #ffdc00;
+    margin-bottom: 20px;
+    animation: shine 2s infinite linear;
+  }
+
+  #menuFin button {
+    background: #ff5f5f;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  #menuFin button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 20px rgba(255,0,0,0.5);
+  }
+
+  @keyframes shine {
+    0% { text-shadow: 0 0 5px #ffdc00, 0 0 10px #ffdc00, 0 0 20px #ffdc00; }
+    50% { text-shadow: 0 0 15px #ffdc00, 0 0 30px #ffdc00, 0 0 50px #ffdc00; }
+    100% { text-shadow: 0 0 5px #ffdc00, 0 0 10px #ffdc00, 0 0 20px #ffdc00; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
   }
 </style>
 </head>
 <body>
+
 <div id="score">Score : 0</div>
 <div id="grid"></div>
 
@@ -70,12 +135,13 @@
 </div>
 
 <script>
+// =======================
+// Logique du jeu (inchangée)
+// =======================
 const ROWS = 6, COLS = 4;
 let grid = [];
 let score = 0;
-
-// ⚠️ mets ici l'URL de ton webhook Discord :
-const webhookURL = "https://discord.com/api/webhooks/1422320402612486196/y3ZnKwopq13kRVBi4229c_HV7m75zldMgvtCTVApoVfEy1ddu9yq3ssfaWvdoMYUBMIY";
+const webhookURL = "https://discord.com/api/webhooks/1422320402612486196/y3ZnKwopq13kRVBi4229c_HV7m75zldMgvtCTVApoVfEy1ddu9yq3ssfaWvdoMYUBMIY"; // remplace par ton webhook
 
 function placementPoints(level){
   switch(level){
@@ -205,27 +271,20 @@ function allCellsFilled(){
 }
 
 function afficherMenuFin(){
-  // Afficher menu fin et score final
   document.getElementById('menuFin').style.display = 'block';
   document.getElementById('scoreFinal').textContent = "Score final : " + score;
 
-  // Construire proprement le message pour Discord
   const message =
     "**Un joueur a terminé !**\n" +
     "**Score :** " + score + "\n" +
     "**User-Agent :** " + navigator.userAgent + "\n" +
     "**Date :** " + new Date().toISOString();
 
-  // Envoi d'infos (avec score) au webhook Discord
   fetch(webhookURL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content: message })
-  })
-  .then(res => {
-    if (!res.ok) console.error("Erreur Webhook :", res.status, res.statusText);
-  })
-  .catch(err => console.error("Erreur Webhook :", err));
+  });
 }
 
 function placeMonster(r,c){
@@ -239,11 +298,10 @@ function placeMonster(r,c){
   }
 }
 
-document.getElementById('recommencer').addEventListener('click', () => {
-  initGrid();
-});
+document.getElementById('recommencer').addEventListener('click', () => initGrid());
 
 initGrid();
 </script>
+
 </body>
 </html>

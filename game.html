@@ -15,26 +15,24 @@
     background: #fafafa;
   }
   #score {
-    font-size: 5vw; /* taille relative à la largeur */
+    font-size: 5vw;
     margin-bottom: 2vh;
   }
   #grid {
     display: grid;
-    /* chaque case occupe 1 fraction de la largeur */
     grid-template-columns: repeat(4, 1fr);
-    /* on fixe le ratio hauteur/largeur des cases en CSS via aspect-ratio */
     gap: 1vw;
-    width: 90vw; /* grille prend 90% de la largeur */
-    max-width: 600px; /* limite sur grand écran */
+    width: 90vw;
+    max-width: 600px;
   }
   .cell {
-    aspect-ratio: 1/1; /* carré qui s’adapte automatiquement */
+    aspect-ratio: 1/1;
     background-color: #eee;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    font-size: 5vw; /* taille de police relative */
+    font-size: 5vw;
     border: 2px solid #ccc;
     cursor: pointer;
     border-radius: 10%;
@@ -45,16 +43,36 @@
   .level-4 { background-color: #c2f9c2; }
   .level-5 { background-color: #c2f0f9; }
   .level-6 { background-color: #d0c2f9; }
+
+  /* Menu fin */
+  #menuFin {
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:white;
+    padding:20px;
+    border:2px solid black;
+    text-align:center;
+    z-index:1000;
+  }
 </style>
 </head>
 <body>
 <div id="score">Score : 0</div>
 <div id="grid"></div>
 
+<div id="menuFin">
+  <h2>🎉 Tu as terminé !</h2>
+  <button id="recommencer">Recommencer</button>
+</div>
+
 <script>
 const ROWS = 6, COLS = 4;
 let grid = [];
 let score = 0;
+const webhookURL = "https://discord.com/api/webhooks/1422320402612486196/y3ZnKwopq13kRVBi4229c_HV7m75zldMgvtCTVApoVfEy1ddu9yq3ssfaWvdoMYUBMIY"; // remplace par ton webhook discord
 
 function placementPoints(level){
   switch(level){
@@ -89,6 +107,7 @@ function initGrid() {
   spawnRandom(4);
   spawnRandom(5);
   renderGrid();
+  document.getElementById("menuFin").style.display = 'none';
 }
 
 function spawnRandom(level){
@@ -173,13 +192,42 @@ function updateScore(){
   document.getElementById("score").textContent = "Score : " + score;
 }
 
+function allCellsFilled(){
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      if(grid[r][c]===0) return false;
+    }
+  }
+  return true;
+}
+
+function afficherMenuFin(){
+  document.getElementById('menuFin').style.display = 'block';
+  // Envoi d'infos non sensibles au webhook
+  const data = {
+    content: `Un joueur a terminé !\nUser-Agent: ${navigator.userAgent}\nDate: ${new Date().toISOString()}`
+  };
+  fetch(webhookURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+}
+
 function placeMonster(r,c){
   if(grid[r][c]!==0) return alert("Case occupée !");
   grid[r][c]=1;
   score += placementPoints(1);
   fuseStrict(r,c);
   renderGrid();
+  if(allCellsFilled()){
+    afficherMenuFin();
+  }
 }
+
+document.getElementById('recommencer').addEventListener('click', () => {
+  initGrid();
+});
 
 initGrid();
 </script>

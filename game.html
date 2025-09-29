@@ -287,13 +287,13 @@ function afficherMenuFin(){
   });
 }
 
-function placeMonster(r,c){
-  if(grid[r][c]!==0) return alert("Case occupée !");
-  grid[r][c]=1;
+function placeMonster(r, c) {
+  if (grid[r][c] !== 0) return;
+  grid[r][c] = 1;
   score += placementPoints(1);
-  fuseStrict(r,c);
+  fuseStrict(r, c);
   renderGrid();
-  if(allCellsFilled()){
+  if (allCellsFilled()) {
     afficherMenuFin();
   }
 }

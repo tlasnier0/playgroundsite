@@ -73,7 +73,9 @@
 const ROWS = 6, COLS = 4;
 let grid = [];
 let score = 0;
-const webhookURL = "https://discord.com/api/webhooks/…"; // ton webhook Discord
+
+// ⚠️ mets ici l'URL de ton webhook Discord :
+const webhookURL = "https://discord.com/api/webhooks/1234567890/…";
 
 function placementPoints(level){
   switch(level){
@@ -207,15 +209,23 @@ function afficherMenuFin(){
   document.getElementById('menuFin').style.display = 'block';
   document.getElementById('scoreFinal').textContent = "Score final : " + score;
 
-  // Envoi d'infos (avec score) au webhook
-  const data = {
-    content: `Un joueur a terminé !\nScore : ${score}\nUser-Agent: ${navigator.userAgent}\nDate: ${new Date().toISOString()}\n----------------------------------------------------------`
-  };
+  // Construire proprement le message pour Discord
+  const message =
+    "**Un joueur a terminé !**\n" +
+    "Score : " + score + "\n" +
+    "User-Agent : " + navigator.userAgent + "\n" +
+    "Date : " + new Date().toISOString();
+
+  // Envoi d'infos (avec score) au webhook Discord
   fetch(webhookURL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+    body: JSON.stringify({ content: message })
+  })
+  .then(res => {
+    if (!res.ok) console.error("Erreur Webhook :", res.status, res.statusText);
+  })
+  .catch(err => console.error("Erreur Webhook :", err));
 }
 
 function placeMonster(r,c){

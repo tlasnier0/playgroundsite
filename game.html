@@ -3,13 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fusion Monsters - Ultra Design</title>
+<title>Fusion Monsters - Hyper Animé</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
   body {
     font-family: 'Press Start 2P', cursive;
-    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    background: linear-gradient(-45deg, #1f1c2c, #928dab, #ff7f7f, #7fdfff);
+    background-size: 400% 400%;
+    animation: bgAnimation 15s ease infinite;
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -20,17 +22,22 @@
     overflow-x: hidden;
   }
 
-  h1, h2, p, #score { text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+  @keyframes bgAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
   #score {
     font-size: 4vw;
     margin-bottom: 2vh;
-    animation: pulse 1.5s infinite;
+    text-shadow: 0 0 10px #fff, 0 0 20px #ffdc00;
+    animation: pulse 1s infinite alternate;
   }
 
   @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    from { transform: scale(1); text-shadow: 0 0 5px #fff; }
+    to { transform: scale(1.1); text-shadow: 0 0 20px #ffdc00; }
   }
 
   #grid {
@@ -51,27 +58,29 @@
     border-radius: 15%;
     cursor: pointer;
     color: #fff;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
     user-select: none;
+    position: relative;
   }
 
   .cell:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(255,255,255,0.5);
   }
 
-  .level-1 { background: #ff7f7f; animation: pop 0.3s ease; }
-  .level-2 { background: #ffd27f; animation: pop 0.3s ease; }
-  .level-3 { background: #ffff7f; animation: pop 0.3s ease; color: #000; }
-  .level-4 { background: #7fff7f; animation: pop 0.3s ease; }
-  .level-5 { background: #7fdfff; animation: pop 0.3s ease; }
-  .level-6 { background: #bf7fff; animation: pop 0.3s ease; }
+  /* Dégradés animés pour chaque niveau */
+  .level-1 { background: linear-gradient(45deg, #ff7f7f, #ff4f4f); animation: pop 0.4s ease; }
+  .level-2 { background: linear-gradient(45deg, #ffd27f, #ffb347); animation: pop 0.4s ease; }
+  .level-3 { background: linear-gradient(45deg, #ffff7f, #ffff00); color:#000; animation: pop 0.4s ease; }
+  .level-4 { background: linear-gradient(45deg, #7fff7f, #32cd32); animation: pop 0.4s ease; }
+  .level-5 { background: linear-gradient(45deg, #7fdfff, #00bfff); animation: pop 0.4s ease; }
+  .level-6 { background: linear-gradient(45deg, #bf7fff, #8a2be2); animation: pop 0.4s ease; }
 
   @keyframes pop {
-    0% { transform: scale(0); }
-    70% { transform: scale(1.2); }
-    100% { transform: scale(1); }
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
   }
 
   #menuFin {
@@ -80,11 +89,11 @@
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
-    background: rgba(0,0,0,0.85);
-    padding:30px 50px;
+    background: rgba(0,0,0,0.9);
+    padding:40px 60px;
     border-radius: 20px;
     text-align:center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 50px rgba(0,0,0,0.7);
     animation: fadeIn 0.5s ease forwards;
   }
 
@@ -95,31 +104,46 @@
   }
 
   #menuFin button {
-    background: #ff5f5f;
+    background: linear-gradient(45deg, #ff5f5f, #ff1f1f);
     border: none;
     color: white;
-    padding: 15px 30px;
+    padding: 15px 35px;
     font-size: 1rem;
     font-weight: bold;
-    border-radius: 10px;
+    border-radius: 15px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s, box-shadow 0.3s;
   }
 
   #menuFin button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 5px 20px rgba(255,0,0,0.5);
+    transform: scale(1.2);
+    box-shadow: 0 5px 25px rgba(255,0,0,0.7);
   }
 
   @keyframes shine {
-    0% { text-shadow: 0 0 5px #ffdc00, 0 0 10px #ffdc00, 0 0 20px #ffdc00; }
-    50% { text-shadow: 0 0 15px #ffdc00, 0 0 30px #ffdc00, 0 0 50px #ffdc00; }
-    100% { text-shadow: 0 0 5px #ffdc00, 0 0 10px #ffdc00, 0 0 20px #ffdc00; }
+    0% { text-shadow: 0 0 5px #ffdc00, 0 0 15px #ffdc00; }
+    50% { text-shadow: 0 0 25px #ffdc00, 0 0 50px #ffdc00; }
+    100% { text-shadow: 0 0 5px #ffdc00, 0 0 15px #ffdc00; }
   }
 
   @keyframes fadeIn {
     from { opacity: 0; transform: translate(-50%, -60%); }
     to { opacity: 1; transform: translate(-50%, -50%); }
+  }
+
+  /* Effet de particules sur fusion */
+  .particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: particleAnim 0.6s forwards;
+  }
+
+  @keyframes particleAnim {
+    0% { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
   }
 </style>
 </head>
@@ -135,13 +159,10 @@
 </div>
 
 <script>
-// =======================
-// Logique du jeu (inchangée)
-// =======================
 const ROWS = 6, COLS = 4;
 let grid = [];
 let score = 0;
-const webhookURL = "https://discord.com/api/webhooks/1422320402612486196/y3ZnKwopq13kRVBi4229c_HV7m75zldMgvtCTVApoVfEy1ddu9yq3ssfaWvdoMYUBMIY"; // remplace par ton webhook
+const webhookURL = "https://discord.com/api/webhooks/…"; // remplace par ton webhook
 
 function placementPoints(level){
   switch(level){
@@ -214,6 +235,17 @@ function connectedTriplet(a,b,c){
   return (ab || ac) && (ab || bc) && (ac || bc);
 }
 
+function spawnParticles(cellDiv){
+  for(let i=0;i<12;i++){
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.style.setProperty('--dx', (Math.random()-0.5)*100 + 'px');
+    p.style.setProperty('--dy', (Math.random()-0.5)*100 + 'px');
+    cellDiv.appendChild(p);
+    setTimeout(()=>p.remove(),600);
+  }
+}
+
 function fuseStrict(lastR,lastC){
   let changed=true;
   while(changed){
@@ -243,8 +275,10 @@ function fuseStrict(lastR,lastC){
               triplet.forEach(([r,c])=>{
                 if(r!==lastR || c!==lastC){
                   grid[r][c]=0;
+                  spawnParticles(document.querySelector(`.cell[data-row='${r}'][data-col='${c}']`));
                 }
               });
+              spawnParticles(document.querySelector(`.cell[data-row='${lastR}'][data-col='${lastC}']`));
               score += placementPoints(parseInt(lvl)+1);
               changed=true;
               break outer;
@@ -287,21 +321,17 @@ function afficherMenuFin(){
   });
 }
 
-function placeMonster(r, c) {
-  if (grid[r][c] !== 0) return;
-  grid[r][c] = 1;
-  score += placementPoints(1);
-  fuseStrict(r, c);
+function placeMonster(r,c){
+  if(grid[r][c]!==0) return;
+  grid[r][c]=1;
+  fuseStrict(r,c);
   renderGrid();
-  if (allCellsFilled()) {
-    afficherMenuFin();
-  }
+  if(allCellsFilled()) afficherMenuFin();
 }
 
-document.getElementById('recommencer').addEventListener('click', () => initGrid());
+document.getElementById('recommencer').addEventListener('click', initGrid);
 
 initGrid();
 </script>
-
 </body>
 </html>
